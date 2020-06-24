@@ -39,7 +39,7 @@ class RestController extends Controller
 
     public function actionRender($user)
     {
-        $leads = Lead::find()->where(['user_id' => $user->id])->orderBy('id ASC')->all();
+        $leads = Lead::find()->where(['user_id' => $user->id])->orderBy('id ASC')->asArray()->all();
         if ($leads == null) {
             $leads = $user->leads;
         }
@@ -49,7 +49,6 @@ class RestController extends Controller
     public function out($leads)
     {
         $this->render('leads', compact('leads'));
-
     }
 
 
@@ -64,19 +63,23 @@ class RestController extends Controller
     private function getLeads($internal_user)
     {
         $leads = $this->leadsRequest($internal_user->id);
+        $i = 0;
         foreach ($leads as $lead) {
-            $internal_lead = Lead::find()->where(['lead_id' => $lead["ID"]])->one();
-            if ($internal_lead != null) {
-                $internal_lead->name = $lead["TITLE"];
-                $internal_lead->status = $lead['STATUS_ID'];
-                $internal_lead->update();
-            } else {
-                $model = new Lead();
-                $model->user_id = $internal_user->id;
-                $model->lead_id = $lead['ID'];
-                $model->name = $lead["TITLE"];
-                $model->status = $lead["STATUS_ID"];
-                $model->save();
+            if ($i <= 4) {
+                $internal_lead = Lead::find()->where(['lead_id' => $lead["ID"]])->one();
+                if ($internal_lead != null) {
+                    $internal_lead->name = $lead["TITLE"];
+                    $internal_lead->status = $lead['STATUS_ID'];
+                    $internal_lead->update();
+                } else {
+                    $model = new Lead();
+                    $model->user_id = $internal_user->id;
+                    $model->lead_id = $lead['ID'];
+                    $model->name = $lead["TITLE"];
+                    $model->status = $lead["STATUS_ID"];
+                    $model->save();
+                }
+                $i++;
             }
         }
     }
