@@ -33,24 +33,16 @@ class RestController extends Controller
         if ($external_user != null) {
             $internal_user = User::login($external_user);
             $this->getLeads($internal_user);
-            $this->actionRender($internal_user);
+            return $this->actionRender($internal_user);
         }
     }
 
     public function actionRender($user)
     {
-        $leads = Lead::find()->where(['user_id' => $user->id])->orderBy('id ASC')->asArray()->all();
-        if ($leads == null) {
-            $leads = $user->leads;
-        }
-        $this->out($leads);
+        $searchModel = new LeadSearch();
+        $dataProvider = $searchModel->search($user->id);
+        return $this->render('leads', compact('dataProvider'));
     }
-
-    public function out($leads)
-    {
-        $this->render('leads', compact('leads'));
-    }
-
 
     private function getUser()
     {

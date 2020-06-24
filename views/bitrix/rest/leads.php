@@ -1,9 +1,16 @@
 <?php
-print_r($leads);die();
 
-$out = "<table><th>Лид</th><th>Статус</th>";
-foreach ($leads as $lead) {
-    $out .= "<td>" . $lead->name . "</td><td>" . $lead->status . "</td>";
-}
-$out .= "</table>";
+use yii\grid\GridView;
+
 ?>
+<div class="col-md-9">
+    <div class="policy-index common__board">
+        <div class="user-table">
+            <?= GridView::widget([
+                'dataProvider' => $dataProvider,
+                'tableOptions' => ['class' => 'table table-bordered'],
+            ]);
+            ?>
+        </div>
+    </div>
+</div>

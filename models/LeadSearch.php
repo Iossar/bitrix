@@ -32,9 +32,9 @@ class LeadSearch extends Lead
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($user_id)
     {
-        $query = Lead::find()->where(['user_id' => $params['user_id']])->limit(5);
+        $query = Lead::find()->where(['user_id' => $user_id])->limit(5);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
