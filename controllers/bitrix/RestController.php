@@ -16,8 +16,8 @@ class RestController extends Controller
 
     public function __construct($id, $module, $config = [])
     {
-        $this->domain = 'https://' . $_REQUEST['DOMAIN'];
-        $this->auth_id = $_REQUEST['AUTH_ID'];
+        $this->domain = 'https://' . Yii::$app->request->get('DOMAIN');
+        $this->auth_id = Yii::$app->request->get('AUTH_ID');
         parent::__construct($id, $module, $config);
     }
 
